@@ -1,0 +1,25 @@
+@use "./variables" as *;
+@import "bootstrap";
+
+body {
+    background-color: $background-color !important;
+}
+
+.custom-select {
+    border-color: $border-color;
+    border-radius: $border-radius !important;
+    cursor: pointer;
+    &:focus {
+        border-color: $border-color-focus;
+        box-shadow: $focus-box-shadow;
+    }
+}
+
+.rarity-box {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 0.5rem auto;
+    padding: 5px 10px;
+    color: white;
+    border-radius: $border-radius;
+}

@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Models\FoundIn;
+use App\Models\ItemType;
+use App\Models\Rarity;
+use Illuminate\Support\Collection;
+
+class SiteController extends Controller
+{
+    function getAllRarity(): Collection
+    {
+        return Rarity::all();
+    }
+    function getAllFoundIn(): Collection
+    {
+        return FoundIn::all();
+    }
+    function getAllItemTypes(): Collection
+    {
+        return ItemType::all();
+    }
+}

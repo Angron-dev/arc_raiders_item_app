@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repository;
+
+use App\Models\Item;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
+class EloquentItemReadRepository implements ItemReadRepository
+{
+    const int PER_PAGE = 50;
+    public function getAllItems(): Collection
+    {
+        return Item::with('rarity', 'foundIn', 'itemType')->get();
+    }
+    public function getPaginatedItems(?array $filter = null, int $perPage = self::PER_PAGE): LengthAwarePaginator
+    {
+        return Item::with('rarity', 'foundIn', 'itemType')
+            ->when($filter['item_name'] ?? null, fn($q, $itemName) => $q->where('item_name', 'like', "%{$itemName}%"))
+            ->when($filter['rarity_id'] ?? null, fn($q, $rarityId) => $q->where('rarity_id', $rarityId))
+            ->when($filter['found_in_id'] ?? null, fn($q, $foundInId) => $q->where('found_in_id', $foundInId))
+            ->when($filter['item_type_id'] ?? null, fn($q, $typeId) => $q->where('item_type_id', $typeId))
+            ->paginate($perPage);
+
+    }
+    public function getWeapons(int $perPage = self::PER_PAGE): LengthAwarePaginator
+    {
+        return Item::where('type', 'Weapon')->get()->paginate($perPage);
+    }
+    public function getItemByRarity(string $rarityId, int $perPage = self::PER_PAGE): LengthAwarePaginator
+    {
+        return Item::where('rarity_id', $rarityId)->get()->paginate($perPage);
+    }
+    public function getItemByFoundIn(string $foundId, int $perPage = self::PER_PAGE): LengthAwarePaginator
+    {
+        return Item::where('found_in_id', $foundId)->get()->paginate($perPage);
+    }
+}
